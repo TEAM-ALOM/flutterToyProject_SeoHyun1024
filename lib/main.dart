@@ -29,7 +29,6 @@ class TodoList extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.error != null) {
-                  print(snapshot.error);
                   return const Scaffold(
                     body: Center(
                       child: Text('Something went wrong :C'),

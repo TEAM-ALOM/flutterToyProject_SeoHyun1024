@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todolist/screens/add_list_screen.dart';
 import 'package:todolist/widgets/list_card.dart';
