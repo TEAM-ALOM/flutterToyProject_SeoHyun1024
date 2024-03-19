@@ -1,8 +1,9 @@
 //할일 추가 화면
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todolist/screens/home_screen.dart';
+import 'package:todolist/services/todo_items.dart';
 
 class AddList extends StatefulWidget {
   const AddList({super.key});
@@ -16,14 +17,15 @@ class _AddListState extends State<AddList> {
 
   DateTime start = DateTime.now();
   DateTime finish = DateTime.now();
-  late Duration diffTimeStart = DateTime.now().difference(start);
-  late Duration diffTimeFinish = DateTime.now().difference(finish);
-  late GestureDetector test;
+  late Duration diffTimeStart;
+  late Duration diffTimeFinish;
 
   final backColor = const Color(0xFFF7E8A5);
-  bool todoIsEmpty = true;
+
   String textContent = "";
+  String textContentMemo = "";
   final TextEditingController _controllerTodo = TextEditingController();
+  final TextEditingController _controllerMemo = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +59,28 @@ class _AddListState extends State<AddList> {
         actions: [
           TextButton(
             onPressed: () {
-              textContent == ""
-                  ? dialogTodo(context)
-                  : diffTimeStart.inMinutes <= 0 ||
-                          diffTimeFinish.inMinutes >= 0
-                      ? dialogTime(context)
-                      : null;
+              if (textContent == "") {
+                dialogTodo(context);
+              } else {
+                if (diffTimeStart.inMinutes < 0 ||
+                    diffTimeFinish.inMinutes > 0) {
+                  dialogTime(context);
+                } else {
+                  var todo = Todo()
+                    ..name = textContent
+                    ..dateTime = selectedDate
+                    ..startTime = start
+                    ..finishTime = finish
+                    ..memo = textContentMemo;
+
+                  Hive.box<Todo>('todos').add(todo);
+                  Navigator.of(context).pop(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => const HomeScreen(),
+                    ),
+                  );
+                }
+              }
             },
             child: const Text(
               '완료',
@@ -178,6 +196,8 @@ class _AddListState extends State<AddList> {
                                         onDateTimeChanged: (DateTime time) {
                                           setState(() {
                                             start = time;
+                                            diffTimeStart = DateTime.now()
+                                                .difference(start);
                                           });
                                         },
                                       ),
@@ -225,6 +245,8 @@ class _AddListState extends State<AddList> {
                                         onDateTimeChanged: (DateTime time) {
                                           setState(() {
                                             finish = time;
+                                            diffTimeFinish = DateTime.now()
+                                                .difference(finish);
                                           });
                                         },
                                       ),
@@ -241,22 +263,26 @@ class _AddListState extends State<AddList> {
                 ),
               ],
             ),
-            const Column(
+            Column(
               children: [
-                Row(
+                const Row(
                   children: [
                     TitleWidget(name: '메 모'),
                   ],
                 ),
-                SmallBox(),
+                const SmallBox(),
                 TextField(
                   textAlignVertical: TextAlignVertical.top,
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(vertical: 130),
                   ),
+                  controller: _controllerMemo,
+                  onChanged: (value) {
+                    textContentMemo = value;
+                  },
                 ),
               ],
             )

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todolist/screens/add_list_screen.dart';
-import 'package:todolist/models/todo_items.dart';
 import 'package:todolist/widgets/list_card.dart';
+import 'package:todolist/services/todo_items.dart';
 
 class HomeScreen extends StatelessWidget {
   final backColor = const Color(0xFFF7E8A5);
@@ -15,16 +16,20 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: backColor,
       appBar: AppBar(
         title: const Text(
-          'TodoList',
+          '✓ TodoList',
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 50,
             fontWeight: FontWeight.bold,
           ),
         ),
+        toolbarHeight: 100,
         backgroundColor: backColor,
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(
+              Icons.add,
+              size: 45,
+            ),
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -38,41 +43,74 @@ class HomeScreen extends StatelessWidget {
         shadowColor: Colors.black,
         elevation: 1,
       ),
-      body: const Column(
-        children: [
-          ListCard(name: '오늘의 할 일'),
-          ListCard(name: '일주일 간 해야 할 일'),
-          ListCard(name: '이번 달의 할 일'),
-          ListCard(name: '지금 할 일'),
-        ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: ValueListenableBuilder(
+            valueListenable: Hive.box('settings').listenable(),
+            builder: _buildWithBox,
+          ),
+        ),
       ),
     );
   }
-}
 
-class ToDoDatabase {
-  List<ToDoItem> toDoList = [];
-  final _myBox = Hive.box('mybox');
-
-  void createInitialData() {
-    toDoList = [];
-  }
-
-  void loadDate() {
-    var loadedDate = _myBox.get("TODOLIST") as List<dynamic>? ?? [];
-    toDoList = loadedDate
-        .map((item) {
-          if (item is Map) {
-            return ToDoItem.fromMap(item.cast<String, dynamic>());
-          }
-          return null;
-        })
-        .where((item) => item != null)
-        .cast<ToDoItem>()
-        .toList();
-  }
-
-  void updateDataBase() {
-    _myBox.put("TODOLIST", toDoList.map((e) => e.toMap()).toList());
+  Widget _buildWithBox(BuildContext context, Box settings, Widget? child) {
+    var reversed = settings.get('reversed', defaultValue: true) as bool;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: ValueListenableBuilder<Box<Todo>>(
+            valueListenable: Hive.box<Todo>('todos').listenable(),
+            builder: (context, box, _) {
+              var todos = box.values.toList().cast<Todo>();
+              if (reversed) {
+                todos = todos.reversed.toList();
+              }
+              //return ListCard(todos);
+              if (todos.isEmpty) {
+                return const Center(
+                  child: Text(
+                    '할 일이 없습니다😭... 그럴리가 없을텐데!!!',
+                    style: TextStyle(
+                      fontSize: 30,
+                    ),
+                  ),
+                );
+              } else {
+                return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: [
+                      ListCard(
+                        todos: todos,
+                        subTitle: '오늘의 할 일',
+                        number: 0,
+                      ),
+                      ListCard(
+                        todos: todos,
+                        subTitle: '일주일 간 해야 할 일',
+                        number: 1,
+                      ),
+                      ListCard(
+                        todos: todos,
+                        subTitle: '이번 달의 할 일',
+                        number: 2,
+                      ),
+                      ListCard(
+                        todos: todos,
+                        subTitle: '지금 할 일',
+                        number: 3,
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

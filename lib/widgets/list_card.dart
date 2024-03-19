@@ -1,82 +1,90 @@
 //홈화면 카드들
 import 'package:flutter/material.dart';
+import 'package:todolist/services/todo_items.dart';
 
-class ListCard extends StatefulWidget {
-  final String name;
+class ListCard extends StatelessWidget {
+  final List<Todo> todos;
+  final String subTitle;
+  final int number;
 
   const ListCard({
+    required this.todos,
+    required this.subTitle,
+    required this.number,
     super.key,
-    required this.name,
   });
 
   @override
-  State<ListCard> createState() => _ListCardState();
-}
-
-class _ListCardState extends State<ListCard> {
-  bool _isChecked = false;
-
-  @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      title: Text(
-        widget.name,
-        style: const TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 18,
-          color: Colors.black,
-        ),
-      ),
-      initiallyExpanded: false,
-      backgroundColor: const Color.fromARGB(255, 235, 238, 175),
-      children: <Widget>[
-        Column(
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.all(5),
+        child: Column(
           children: [
-            const Card(
-              // margin: EdgeInsets.symmetric(
-              //   vertical: 10,
-              //   horizontal: 3,
-              // ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 100,
-                  vertical: 20,
-                ),
-                child: Text(
-                  '할 일이 없습니다!! 그럴 리가 없을텐데!',
-                  style: TextStyle(),
-                ),
-              ),
-            ),
-            Card(
-              margin: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 3,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30.1,
-                  vertical: 10,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    const Text('아무거나'),
-                    Checkbox(
-                      value: _isChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _isChecked = value!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
+            ExpansionTile(
+              title: Text(subTitle),
+              children: [
+                ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: todos.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var todo = todos[index];
+                      return _buildTodo(todo);
+                    }),
+              ],
             ),
           ],
         ),
-      ],
+      ),
     );
   }
+}
+
+Widget _buildTodo(Todo todo) {
+  return Card(
+    color: Colors.white,
+    child: Padding(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                todo.name,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  decoration:
+                      todo.isCompleted ? TextDecoration.lineThrough : null,
+                ),
+              ),
+              Text(
+                '${todo.dateTime.month}월 ${todo.dateTime.day}일  '
+                '${todo.startTime.hour}:${todo.startTime.minute} ~ ${todo.finishTime.hour}:${todo.finishTime.minute}',
+                style: TextStyle(fontSize: 19, color: Colors.grey[800]),
+              ),
+            ],
+          ),
+          const Spacer(),
+          IconButton(
+            iconSize: 30,
+            icon: Icon(
+                todo.isCompleted ? Icons.check_box : Icons.check_box_outlined),
+            onPressed: () {
+              todo.isCompleted = !todo.isCompleted;
+              todo.save();
+            },
+          ),
+          IconButton(
+            iconSize: 30,
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              todo.delete();
+            },
+          )
+        ],
+      ),
+    ),
+  );
 }
