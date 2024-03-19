@@ -1,16 +1,19 @@
 # todolist
+토이 프로젝트 - 투두 리스트 만들기
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* ## 홈 화면
+  * Expansion Tile 사용하여 리스트 나열
+  * Check Box 이용
+* ## 할일 추가 화면
+  * 완료 버튼 -
+    * 할일 항목 비어있으면 알림창 띄움.
+    * 시간 시작시간 <= 현재 시간 <= 종료시간 이면 창 나감
+  * 취소 버튼 - 이전 화면으로 돌아감.
+  * 할일 - textfield 이용
+  * 날짜 - DatePicker 이용
+  * 시간 - cupertino DatePicker 이용
+  * 메모 - textfield 이용
+    
+* ## 구현하지 못한 것
+  * 완료 버튼 누르면 할일 저장하는 것.
+  * 리스트 저장해서 날짜별로 분류해서 홈화면에 띄우기
