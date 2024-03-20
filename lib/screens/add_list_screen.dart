@@ -17,8 +17,8 @@ class _AddListState extends State<AddList> {
 
   DateTime start = DateTime.now();
   DateTime finish = DateTime.now();
-  late Duration diffTimeStart;
-  late Duration diffTimeFinish;
+  late Duration diffTimeStart = DateTime.now().difference(start);
+  late Duration diffTimeFinish = DateTime.now().difference(finish);
 
   final backColor = const Color(0xFFF7E8A5);
 

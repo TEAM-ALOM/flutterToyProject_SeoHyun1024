@@ -29,7 +29,21 @@ class ListCard extends StatelessWidget {
                     itemCount: todos.length,
                     itemBuilder: (BuildContext context, int index) {
                       var todo = todos[index];
-                      return _buildTodo(todo);
+                      if (number == 0 &&
+                          todo.dateTime.day == DateTime.now().day) {
+                        return _buildTodo(todo);
+                      } else if (number == 1 &&
+                          DateTime.now().difference(todo.dateTime).inDays >=
+                              -7) {
+                        return _buildTodo(todo);
+                      } else if (number == 2 &&
+                          todo.dateTime.month == DateTime.now().month) {
+                        return _buildTodo(todo);
+                      } else if (number == 3) {
+                        return _buildTodo(todo);
+                      } else {
+                        return Container();
+                      }
                     }),
               ],
             ),
