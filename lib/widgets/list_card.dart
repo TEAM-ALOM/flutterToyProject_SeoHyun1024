@@ -83,8 +83,9 @@ Widget _buildTodo(Todo todo) {
           const Spacer(),
           IconButton(
             iconSize: 30,
-            icon: Icon(
-                todo.isCompleted ? Icons.check_box : Icons.check_box_outlined),
+            icon: Icon(todo.isCompleted
+                ? Icons.check_box
+                : Icons.check_box_outline_blank),
             onPressed: () {
               todo.isCompleted = !todo.isCompleted;
               todo.save();

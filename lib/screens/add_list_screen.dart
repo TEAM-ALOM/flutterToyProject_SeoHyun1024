@@ -35,18 +35,17 @@ class _AddListState extends State<AddList> {
         title: const Text(
           '오늘의 할일이 무엇인가요?',
           style: TextStyle(
-            fontSize: 25,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: backColor,
+        toolbarHeight: 55,
+        leadingWidth: 70,
         leading: TextButton(
-          child: const Text(
-            '취소',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-            ),
+          style: TextButton.styleFrom(
+            backgroundColor: backColor,
+            shape: const StadiumBorder(),
           ),
           onPressed: () {
             Navigator.of(context).pop(
@@ -55,6 +54,13 @@ class _AddListState extends State<AddList> {
               ),
             );
           },
+          child: const Text(
+            '취소',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+            ),
+          ),
         ),
         actions: [
           TextButton(
@@ -82,6 +88,9 @@ class _AddListState extends State<AddList> {
                 }
               }
             },
+            style: TextButton.styleFrom(
+              backgroundColor: backColor,
+            ),
             child: const Text(
               '완료',
               style: TextStyle(
@@ -95,198 +104,206 @@ class _AddListState extends State<AddList> {
         shadowColor: Colors.black,
         elevation: 1,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
-        child: Column(
-          children: [
-            const SmallBox(),
-            Column(
-              children: [
-                const Row(
-                  children: [
-                    TitleWidget(
-                      name: '할 일',
-                    ),
-                  ],
-                ),
-                TextField(
-                  controller: _controllerTodo,
-                  onChanged: (value) {
-                    textContent = value;
-                  },
-                ),
-              ],
-            ),
-            const SmallBox(),
-            Row(
-              children: [
-                const TitleWidget(
-                  name: '날 짜',
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 60),
-                  child: Text(
-                    '$selectedDate'.split(' ')[0],
-                    style: const TextStyle(fontSize: 19),
-                  ),
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.yellow.shade600,
-                  ),
-                  onPressed: () => _selectDate(context),
-                  child: const Text(
-                    '날짜 선택',
-                    style: TextStyle(
-                      color: Colors.purple,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const MiddleBox(),
-            Column(
-              children: [
-                const Row(
-                  children: [
-                    TitleWidget(
-                      name: '시 간',
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25),
+          child: Column(
+            children: [
+              const SmallBox(),
+              Column(
+                children: [
+                  const Row(
                     children: [
-                      Column(
-                        children: [
-                          const Text('시작시간'),
-                          GestureDetector(
-                            child: Container(
-                              width: 120,
-                              height: 57,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '${start.hour}:${start.minute}',
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 19,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              showCupertinoDialog(
-                                barrierDismissible: true,
-                                context: context,
-                                builder: (BuildContext contect) {
-                                  return Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                      color: Colors.white,
-                                      height: 300.0,
-                                      child: CupertinoDatePicker(
-                                        mode: CupertinoDatePickerMode.time,
-                                        onDateTimeChanged: (DateTime time) {
-                                          setState(() {
-                                            start = time;
-                                            diffTimeStart = DateTime.now()
-                                                .difference(start);
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Text('종료시간'),
-                          GestureDetector(
-                            child: Container(
-                              width: 120,
-                              height: 57,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '${finish.hour}:${finish.minute}',
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 19,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              showCupertinoDialog(
-                                barrierDismissible: true,
-                                context: context,
-                                builder: (BuildContext contect) {
-                                  return Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                      color: Colors.white,
-                                      height: 300.0,
-                                      child: CupertinoDatePicker(
-                                        mode: CupertinoDatePickerMode.time,
-                                        onDateTimeChanged: (DateTime time) {
-                                          setState(() {
-                                            finish = time;
-                                            diffTimeFinish = DateTime.now()
-                                                .difference(finish);
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ],
+                      TitleWidget(
+                        name: '할 일',
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                const Row(
-                  children: [
-                    TitleWidget(name: '메 모'),
-                  ],
-                ),
-                const SmallBox(),
-                TextField(
-                  textAlignVertical: TextAlignVertical.top,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(vertical: 130),
+                  TextField(
+                    controller: _controllerTodo,
+                    onChanged: (value) {
+                      textContent = value;
+                    },
                   ),
-                  controller: _controllerMemo,
-                  onChanged: (value) {
-                    textContentMemo = value;
-                  },
-                ),
-              ],
-            )
-          ],
+                ],
+              ),
+              const SmallBox(),
+              Row(
+                children: [
+                  const TitleWidget(
+                    name: '날 짜',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    child: Text(
+                      '$selectedDate'.split(' ')[0],
+                      style: const TextStyle(fontSize: 19),
+                    ),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.yellow.shade600,
+                    ),
+                    onPressed: () => _selectDate(context),
+                    onHover: (value) {
+                      setState(() {
+                        value = !value;
+                      });
+                    },
+                    child: const Text(
+                      '날짜 선택',
+                      style: TextStyle(
+                        color: Colors.purple,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const MiddleBox(),
+              Column(
+                children: [
+                  const Row(
+                    children: [
+                      TitleWidget(
+                        name: '시 간',
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            const Text('시작시간'),
+                            GestureDetector(
+                              child: Container(
+                                width: 120,
+                                height: 57,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${start.hour}:${start.minute}',
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 19,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                showCupertinoDialog(
+                                  barrierDismissible: true,
+                                  context: context,
+                                  builder: (BuildContext contect) {
+                                    return Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: Container(
+                                        color: Colors.white,
+                                        height: 300.0,
+                                        child: CupertinoDatePicker(
+                                          mode: CupertinoDatePickerMode.time,
+                                          onDateTimeChanged: (DateTime time) {
+                                            setState(() {
+                                              start = time;
+                                              diffTimeStart = DateTime.now()
+                                                  .difference(start);
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            const Text('종료시간'),
+                            GestureDetector(
+                              child: Container(
+                                width: 120,
+                                height: 57,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${finish.hour}:${finish.minute}',
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 19,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                showCupertinoDialog(
+                                  barrierDismissible: true,
+                                  context: context,
+                                  builder: (BuildContext contect) {
+                                    return Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: Container(
+                                        color: Colors.white,
+                                        height: 300.0,
+                                        child: CupertinoDatePicker(
+                                          mode: CupertinoDatePickerMode.time,
+                                          onDateTimeChanged: (DateTime time) {
+                                            setState(() {
+                                              finish = time;
+                                              diffTimeFinish = DateTime.now()
+                                                  .difference(finish);
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  const Row(
+                    children: [
+                      TitleWidget(name: '메 모'),
+                    ],
+                  ),
+                  const SmallBox(),
+                  TextField(
+                    textAlignVertical: TextAlignVertical.top,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(vertical: 130),
+                    ),
+                    controller: _controllerMemo,
+                    onChanged: (value) {
+                      textContentMemo = value;
+                    },
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

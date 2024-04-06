@@ -17,11 +17,12 @@ class HomeScreen extends StatelessWidget {
         title: const Text(
           '✓ TodoList',
           style: TextStyle(
-            fontSize: 50,
+            fontSize: 25,
             fontWeight: FontWeight.bold,
           ),
         ),
-        toolbarHeight: 100,
+        centerTitle: true,
+        toolbarHeight: 55,
         backgroundColor: backColor,
         actions: [
           IconButton(
@@ -71,7 +72,7 @@ class HomeScreen extends StatelessWidget {
               if (todos.isEmpty) {
                 return const Center(
                   child: Text(
-                    '할 일이 없습니다😭... 그럴리가 없을텐데!!!',
+                    '할 일이 없습니다😭...\n그럴리가 없을텐데!!!',
                     style: TextStyle(
                       fontSize: 30,
                     ),
