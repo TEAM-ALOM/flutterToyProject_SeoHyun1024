@@ -60,6 +60,7 @@ Widget _buildTodo(Todo todo) {
     child: Padding(
       padding: const EdgeInsets.all(20),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,23 +77,29 @@ Widget _buildTodo(Todo todo) {
               Text(
                 '${todo.dateTime.month}월 ${todo.dateTime.day}일  '
                 '${todo.startTime.hour}:${todo.startTime.minute} ~ ${todo.finishTime.hour}:${todo.finishTime.minute}',
-                style: TextStyle(fontSize: 19, color: Colors.grey[800]),
+                style: TextStyle(fontSize: 15, color: Colors.grey[800]),
               ),
             ],
           ),
-          const Spacer(),
-          IconButton(
-            iconSize: 30,
-            icon: Icon(todo.isCompleted
-                ? Icons.check_box
-                : Icons.check_box_outline_blank),
-            onPressed: () {
-              todo.isCompleted = !todo.isCompleted;
-              todo.save();
-            },
+          const Spacer(
+            flex: 3,
+          ),
+          Row(
+            children: [
+              IconButton(
+                iconSize: 20,
+                icon: Icon(todo.isCompleted
+                    ? Icons.check_box
+                    : Icons.check_box_outline_blank),
+                onPressed: () {
+                  todo.isCompleted = !todo.isCompleted;
+                  todo.save();
+                },
+              ),
+            ],
           ),
           IconButton(
-            iconSize: 30,
+            iconSize: 20,
             icon: const Icon(Icons.delete),
             onPressed: () {
               todo.delete();

@@ -17,8 +17,6 @@ class _AddListState extends State<AddList> {
 
   DateTime start = DateTime.now();
   DateTime finish = DateTime.now();
-  late Duration diffTimeStart = DateTime.now().difference(start);
-  late Duration diffTimeFinish = DateTime.now().difference(finish);
 
   final backColor = const Color(0xFFF7E8A5);
 
@@ -68,8 +66,7 @@ class _AddListState extends State<AddList> {
               if (textContent == "") {
                 dialogTodo(context);
               } else {
-                if (diffTimeStart.inMinutes < 0 ||
-                    diffTimeFinish.inMinutes > 0) {
+                if (!(finish.isAfter(start))) {
                   dialogTime(context);
                 } else {
                   var todo = Todo()
@@ -143,18 +140,17 @@ class _AddListState extends State<AddList> {
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.yellow.shade600,
-                    ),
+                        backgroundColor: Colors.purple[100]),
                     onPressed: () => _selectDate(context),
                     onHover: (value) {
                       setState(() {
                         value = !value;
                       });
                     },
-                    child: const Text(
+                    child: Text(
                       '날짜 선택',
                       style: TextStyle(
-                        color: Colors.purple,
+                        color: Colors.purple[600],
                       ),
                     ),
                   ),
@@ -211,9 +207,8 @@ class _AddListState extends State<AddList> {
                                           mode: CupertinoDatePickerMode.time,
                                           onDateTimeChanged: (DateTime time) {
                                             setState(() {
-                                              start = time;
-                                              diffTimeStart = DateTime.now()
-                                                  .difference(start);
+                                              start = DateTime(0, 1, 1,
+                                                  time.hour, time.minute);
                                             });
                                           },
                                         ),
@@ -260,9 +255,8 @@ class _AddListState extends State<AddList> {
                                           mode: CupertinoDatePickerMode.time,
                                           onDateTimeChanged: (DateTime time) {
                                             setState(() {
-                                              finish = time;
-                                              diffTimeFinish = DateTime.now()
-                                                  .difference(finish);
+                                              finish = DateTime(0, 1, 1,
+                                                  time.hour, time.minute);
                                             });
                                           },
                                         ),
